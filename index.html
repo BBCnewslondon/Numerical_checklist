@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atomic Physics Checklist</title>
+    <link rel="stylesheet" href="styles.css">
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [["\\(", "\\)"], ["$", "$"]],
+                displayMath: [["\\[", "\\]"], ["$$", "$$"]]
+            },
+            svg: {
+                fontCache: "global"
+            }
+        };
+    </script>
+    <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+    <header class="page-header">
+        <div class="header-inner">
+            <h1>Numerical Methods Checklist</h1>
+            <p class="lead">Track your mastery of the core numerical methods concepts.</p>
+        </div>
+    </header>
+    <main>
+        <section class="toolbar" aria-label="Checklist controls">
+            <div class="toolbar-content">
+                <div class="progress-summary" aria-live="polite">
+                    Overall progress: <span id="overall-progress">0%</span>
+                </div>
+                <div class="timer-display">
+                    <span id="timer">00:00:00</span>
+                    <button id="timer-toggle" type="button">Start Study</button>
+                    <button id="timer-reset" type="button">Reset</button>
+                </div>
+                <div class="search-container">
+                    <input type="text" id="search-input" placeholder="Search topics..." aria-label="Search checklist items">
+                </div>
+                <div class="toolbar-actions">
+                    <button id="toggle-colors" type="button">Pause Colors</button>
+                    <button id="slower-colors" type="button">Slower</button>
+                    <button id="faster-colors" type="button">Faster</button>
+                    <button id="export-progress" type="button">Export</button>
+                    <button id="reset-progress" type="button">Reset All</button>
+                </div>
+            </div>
+        </section>
+        <section id="checklist" class="chapters" aria-live="polite">
+            <!-- Checklist content populated at runtime -->
+        </section>
+    </main>
+    <footer class="page-footer">
+        <small>Tip: Hover over equations or key ideas to highlight their theme lines. 
+        <br>Keyboard shortcuts: P (pause colors), S (start/pause timer), R (reset timer), / (search)</small>
+    </footer>
+    <div class="particles" id="particles"></div>
+    <script src="script.js"></script>
+</body>
+</html>

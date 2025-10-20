@@ -1,0 +1,507 @@
+[
+  {
+    "chapter": "Chapter 1: Errors & Floating Point Arithmetic",
+    "summary": "Introduction to the principles of numerical methods, focusing on how computers represent numbers and how errors arise and propagate in calculations.",
+    "sections": [
+      {
+        "title": "Key Concepts",
+        "items": [
+          {
+            "label": "Floating Point Representation",
+            "detail": "Computers store real numbers in a form like $\\pm M \\times B^E$ (Mantissa, Base, Exponent). This finite representation means most real numbers cannot be stored exactly, leading to representation errors."
+          },
+          {
+            "label": "Absolute & Relative Error",
+            "detail": "Absolute Error measures the raw difference between an approximation and the true value ($|p^* - p|$), while Relative Error scales this by the true value ($\\frac{|p^* - p|}{|p|}$), which is often a more meaningful measure of accuracy."
+          },
+          {
+            "label": "Loss of Significance",
+            "detail": "A critical source of error that occurs when subtracting two nearly equal numbers. The leading digits cancel out, leaving a result dominated by the less accurate trailing digits. This is also known as catastrophic cancellation."
+          },
+          {
+            "label": "Algorithm Stability",
+            "detail": "An algorithm is stable if it does not magnify initial errors during computation. An unstable algorithm can produce wildly inaccurate results even with very small initial errors."
+          }
+        ]
+      },
+      {
+        "title": "Worked Example",
+        "items": [
+          {
+            "label": "Avoiding Catastrophic Cancellation",
+            "detail": "Show how the function $f(x) = \\frac{1 - \\cos(x)}{x^2}$ can be rewritten to avoid numerical instability for values of $x$ near 0.",
+            "derivation": [
+              {
+                "type": "text",
+                "text": "Catastrophic cancellation occurs when subtracting two nearly equal numbers. For $f(x) = \\frac{1 - \\cos(x)}{x^2}$, if $x$ is close to 0, then $\\cos(x)$ is very close to 1, and the numerator loses significant precision."
+              },
+              {
+                "type": "text",
+                "text": "To fix this, we can use the half-angle trigonometric identity:"
+              },
+              {
+                "type": "equation",
+                "text": "1 - \\cos(x) = 2\\sin^2(x/2)"
+              },
+              {
+                "type": "text",
+                "text": "Substituting this into the original function gives a numerically stable form that avoids the subtraction of nearly equal numbers:"
+              },
+              {
+                "type": "equation",
+                "text": "f(x) = \\frac{2\\sin^2(x/2)}{x^2}"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "chapter": "Chapter 2: Solving Systems of Linear Equations",
+    "summary": "Covers direct and iterative methods for solving Ax=b. The stability and efficiency of these methods depend heavily on the properties of the matrix A.",
+    "sections": [
+      {
+        "title": "Key Concepts",
+        "items": [
+          {
+            "label": "Vector & Matrix Norms",
+            "detail": "Norms (like $L_1, L_2, L_\\infty$) are functions that measure the 'size' or 'length' of a vector or matrix. They are essential for analyzing the error and convergence of numerical methods."
+          },
+          {
+            "label": "Condition Number",
+            "detail": "Defined as $\\kappa(A) = \\|A\\| \\|A^{-1}\\|$. It measures how sensitive the solution $x$ is to small changes in $A$ or $b$. A large condition number signifies an 'ill-conditioned' problem, where small input errors can lead to large output errors. It's like a wobbly table - a tiny nudge can cause a big spill."
+          },
+          {
+            "label": "Gaussian Elimination & LU Factorization",
+            "detail": "A direct method for solving $Ax=b$. It involves factoring $A$ into $L$ (lower triangular) and $U$ (upper triangular). The system $LUx=b$ is then solved efficiently by first solving $Ly=b$ (forward substitution) and then $Ux=y$ (backward substitution)."
+          },
+          {
+            "label": "Pivoting",
+            "detail": "A strategy used with Gaussian elimination to improve numerical stability. Partial pivoting involves swapping rows to ensure the largest element in a column is the pivot element, avoiding division by small numbers."
+          },
+          {
+            "label": "Iterative Methods (Jacobi, Gauss-Seidel)",
+            "detail": "These methods start with an initial guess for $x$ and iteratively refine it. Gauss-Seidel typically converges faster than Jacobi because it uses the most recently updated values of $x$ within each iteration. Convergence is guaranteed if the matrix is strictly diagonally dominant."
+          }
+        ]
+      },
+      {
+        "title": "Worked Examples",
+        "items": [
+          {
+            "label": "Gaussian Elimination",
+            "detail": "Solve the system of equations: $2x + y = 4$ and $x - y = -1$.",
+            "derivation": [
+              {
+                "type": "text",
+                "text": "First, write the augmented matrix for the system:"
+              },
+              {
+                "type": "equation",
+                "text": "\\begin{pmatrix} 2 & 1 & | & 4 \\\\ 1 & -1 & | & -1 \\end{pmatrix}"
+              },
+              {
+                "type": "text",
+                "text": "Perform the row operation $R_2 \\to R_2 - \\frac{1}{2}R_1$ to create a zero in the lower-left position:"
+              },
+              {
+                "type": "equation",
+                "text": "\\begin{pmatrix} 2 & 1 & | & 4 \\\\ 0 & -1.5 & | & -3 \\end{pmatrix}"
+              },
+              {
+                "type": "text",
+                "text": "Now, use back substitution. The second row gives:"
+              },
+              {
+                "type": "equation",
+                "text": "-1.5y = -3 \\Rightarrow y=2"
+              },
+              {
+                "type": "text",
+                "text": "Substitute $y=2$ into the first row's equation:"
+              },
+              {
+                "type": "equation",
+                "text": "2x + 2 = 4 \\Rightarrow 2x = 2 \\Rightarrow x=1"
+              },
+              {
+                "type": "text",
+                "text": "The final solution is $(x, y) = (1, 2)$."
+              }
+            ]
+          },
+          {
+            "label": "Jacobi Method",
+            "detail": "For the system $5x + y = 11, 2x + 8y = 18$, perform two iterations of the Jacobi method starting with $(x^{(0)}, y^{(0)}) = (0,0)$.",
+            "derivation": [
+              {
+                "type": "text",
+                "text": "Rearrange the equations to solve for each variable:"
+              },
+              {
+                "type": "equation",
+                "text": "x^{(k+1)} = \\frac{11 - y^{(k)}}{5} \\quad \\text{and} \\quad y^{(k+1)} = \\frac{18 - 2x^{(k)}}{8}"
+              },
+              {
+                "type": "text",
+                "text": "**Iteration 1:** Using $(x^{(0)}, y^{(0)}) = (0,0)$:"
+              },
+              {
+                "type": "equation",
+                "text": "x^{(1)} = \\frac{11-0}{5} = 2.2 \\quad , \\quad y^{(1)} = \\frac{18 - 2(0)}{8} = 2.25"
+              },
+              {
+                "type": "text",
+                "text": "**Iteration 2:** Using $(x^{(1)}, y^{(1)}) = (2.2, 2.25)$:"
+              },
+              {
+                "type": "equation",
+                "text": "x^{(2)} = \\frac{11-2.25}{5} = 1.75 \\quad , \\quad y^{(2)} = \\frac{18 - 2(2.2)}{8} = 1.7"
+              }
+            ]
+          },
+          {
+            "label": "Gauss-Seidel Method",
+            "detail": "For the system $5x + y = 11, 2x + 8y = 18$, perform two iterations of the Gauss-Seidel method starting with $(x^{(0)}, y^{(0)}) = (0,0)$.",
+            "derivation": [
+              {
+                "type": "text",
+                "text": "The rearranged equations are:"
+              },
+              {
+                "type": "equation",
+                "text": "x^{(k+1)} = \\frac{11 - y^{(k)}}{5} \\quad \\text{and} \\quad y^{(k+1)} = \\frac{18 - 2x^{(k+1)}}{8}"
+              },
+              {
+                "type": "text",
+                "text": "**Iteration 1:** Start with $y^{(0)}=0$:"
+              },
+              {
+                "type": "equation",
+                "text": "x^{(1)} = \\frac{11-0}{5} = 2.2"
+              },
+              {
+                "type": "text",
+                "text": "Immediately use this new value of $x^{(1)}$ to calculate $y^{(1)}$:"
+              },
+              {
+                "type": "equation",
+                "text": "y^{(1)} = \\frac{18 - 2(2.2)}{8} = 1.7"
+              },
+              {
+                "type": "text",
+                "text": "**Iteration 2:** Start with $y^{(1)}=1.7$:"
+              },
+              {
+                "type": "equation",
+                "text": "x^{(2)} = \\frac{11-1.7}{5} = 1.86"
+              },
+              {
+                "type": "equation",
+                "text": "y^{(2)} = \\frac{18 - 2(1.86)}{8} = 1.785"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "chapter": "Chapter 3: Solving Non-Linear Equations",
+    "summary": "Focuses on iterative techniques to find the roots of a single non-linear equation $f(x)=0$, where analytical solutions are often impossible.",
+    "sections": [
+      {
+        "title": "Key Concepts",
+        "items": [
+          {
+            "label": "Bisection Method",
+            "detail": "A bracketing method that repeatedly halves an interval $[a,b]$ while ensuring the root remains bracketed ($f(a)f(b)<0$). It has guaranteed but slow (linear) convergence. It's the numerical equivalent of a binary search."
+          },
+          {
+            "label": "Newton-Raphson Method",
+            "detail": "An open method that uses tangent lines to approximate the root. It converges very quickly (quadratically) when the initial guess is close to the root, but can easily diverge otherwise."
+          },
+          {
+            "label": "Secant Method",
+            "detail": "A variation of Newton's method that avoids the need to compute the derivative $f'(x)$. Instead, it approximates the tangent with a secant line through two previous points. It converges faster than bisection but slower than Newton's method."
+          },
+          {
+            "label": "Fixed-Point Iteration",
+            "detail": "Involves rearranging $f(x)=0$ into the form $x=g(x)$ and iterating $x_{n+1}=g(x_n)$. Its convergence depends on the properties of $g(x)$, specifically requiring $|g'(x)| < 1$ near the root."
+          }
+        ]
+      },
+      {
+        "title": "Worked Examples",
+        "items": [
+          {
+            "label": "Bisection Method",
+            "detail": "For the function $f(x) = x^3 - x - 2$, perform two iterations of the Bisection Method on the interval $[1, 2]$.",
+            "derivation": [
+              {
+                "type": "text",
+                "text": "Check endpoints: $f(1) = -2$ and $f(2) = 4$. Since $f(1)f(2)<0$, a root exists in $[1,2]$."
+              },
+              {
+                "type": "text",
+                "text": "**Iteration 1:** The midpoint is $c_1 = \\frac{1+2}{2} = 1.5$. Calculate $f(1.5) = -0.125$."
+              },
+              {
+                "type": "text",
+                "text": "Since $f(1.5)$ is negative and $f(2)$ is positive, the new interval is $[1.5, 2]$."
+              },
+              {
+                "type": "text",
+                "text": "**Iteration 2:** The new midpoint is $c_2 = \\frac{1.5+2}{2} = 1.75$. The new interval is $[1.5, 1.75]$."
+              }
+            ]
+          },
+          {
+            "label": "Newton-Raphson Method",
+            "detail": "Find the first two approximations for a root of $f(x) = x^2 - 5$ using the Newton-Raphson method, starting with an initial guess of $x_0=2$.",
+            "derivation": [
+              {
+                "type": "text",
+                "text": "The formula is $x_{n+1} = x_n - \\frac{f(x_n)}{f'(x_n)}$. The derivative is $f'(x) = 2x$."
+              },
+              {
+                "type": "text",
+                "text": "**Iteration 1:** Using $x_0=2$:"
+              },
+              {
+                "type": "equation",
+                "text": "x_1 = 2 - \\frac{2^2 - 5}{2(2)} = 2 - \\frac{-1}{4} = 2.25"
+              },
+              {
+                "type": "text",
+                "text": "**Iteration 2:** Using $x_1=2.25$:"
+              },
+              {
+                "type": "equation",
+                "text": "x_2 = 2.25 - \\frac{2.25^2 - 5}{2(2.25)} = 2.25 - \\frac{0.0625}{4.5} \\approx 2.2361"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "chapter": "Chapter 4 & 5: Interpolation, Differentiation & Integration",
+    "summary": "Methods for approximating functions with polynomials, and for estimating derivatives and definite integrals from discrete data.",
+    "sections": [
+      {
+        "title": "Key Concepts",
+        "items": [
+          {
+            "label": "Polynomial Interpolation",
+            "detail": "Finding a unique polynomial of degree $\\le n$ that passes through $n+1$ data points. Lagrange and Newton forms are two ways to construct this polynomial."
+          },
+          {
+            "label": "Runge's Phenomenon",
+            "detail": "High-degree polynomial interpolation using equally spaced points can lead to large oscillations near the endpoints of the interval. Using Chebyshev nodes or splines can mitigate this."
+          },
+          {
+            "label": "Spline Interpolation",
+            "detail": "Using a series of low-degree polynomials (e.g., cubic) joined together smoothly to fit data points. This avoids Runge's phenomenon and is widely used in computer graphics. It's like using a flexible draftman's ruler."
+          },
+          {
+            "label": "Numerical Integration (Quadrature)",
+            "detail": "Methods like the Trapezoidal Rule and Simpson's Rule approximate definite integrals by integrating simple interpolating polynomials. Composite rules increase accuracy by dividing the interval into smaller sub-intervals."
+          },
+          {
+            "label": "Gaussian Quadrature",
+            "detail": "A powerful integration technique that achieves high accuracy by strategically choosing non-uniformly spaced points and weights. For the same number of function evaluations, it's typically more accurate than Newton-Cotes methods."
+          }
+        ]
+      },
+      {
+        "title": "Worked Examples",
+        "items": [
+          {
+            "label": "Simpson's Rule",
+            "detail": "Use a single application of Simpson's Rule to approximate the integral $\\int_0^2 x^3 dx$.",
+            "derivation": [
+              {
+                "type": "text",
+                "text": "Simpson's Rule is $\\int_a^b f(x) dx \\approx \\frac{h}{3}[f(a) + 4f(\\frac{a+b}{2}) + f(b)]$. Here, $a=0, b=2, f(x)=x^3$. The step size $h=(b-a)/2=1$."
+              },
+              {
+                "type": "text",
+                "text": "Applying the formula:"
+              },
+              {
+                "type": "equation",
+                "text": "\\frac{1}{3}[f(0) + 4f(1) + f(2)] = \\frac{1}{3}[0^3 + 4(1^3) + 2^3] = \\frac{12}{3} = 4"
+              },
+              {
+                "type": "text",
+                "text": "The true value is $[\\frac{x^4}{4}]_0^2 = 4$. The rule is exact for polynomials of degree up to 3."
+              }
+            ]
+          },
+          {
+            "label": "Central Difference Formula",
+            "detail": "Use the central difference formula with $h=0.1$ to approximate the derivative of $f(x)=x^3$ at $x=2$.",
+            "derivation": [
+              {
+                "type": "text",
+                "text": "The central difference formula is $f'(x) \\approx \\frac{f(x+h) - f(x-h)}{2h}$. We need $f(2.1)$ and $f(1.9)$."
+              },
+              {
+                "type": "equation",
+                "text": "f(2.1) = 2.1^3 = 9.261 \\quad , \\quad f(1.9) = 1.9^3 = 6.859"
+              },
+              {
+                "type": "text",
+                "text": "Plugging these values into the formula:"
+              },
+              {
+                "type": "equation",
+                "text": "f'(2) \\approx \\frac{9.261 - 6.859}{2(0.1)} = \\frac{2.402}{0.2} = 12.01"
+              },
+              {
+                "type": "text",
+                "text": "The true value is $f'(2)=3(2^2)=12$."
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "chapter": "Chapter 6: Ordinary Differential Equations",
+    "summary": "Numerical techniques for solving initial value problems for ordinary differential equations (ODEs), which are fundamental to modeling physical systems.",
+    "sections": [
+      {
+        "title": "Key Concepts",
+        "items": [
+          {
+            "label": "Initial Value Problem (IVP)",
+            "detail": "The problem of finding a function $y(t)$ that satisfies an ODE $\\frac{dy}{dt} = f(t,y)$ and a given starting point $y(t_0)=y_0$."
+          },
+          {
+            "label": "Euler's Method",
+            "detail": "The simplest ODE solver. It approximates the solution by taking small steps along the tangent line at each point. It is a first-order method, meaning its global error is proportional to the step size $h$, so it's not very accurate."
+          },
+          {
+            "label": "Runge-Kutta Methods (RK4)",
+            "detail": "A family of powerful methods that achieve higher accuracy by using a weighted average of function evaluations at several points within each step. The classic fourth-order Runge-Kutta (RK4) method is a robust and widely used general-purpose solver."
+          },
+          {
+            "label": "Local vs. Global Error",
+            "detail": "Local truncation error is the error introduced in a single step, while global error is the total accumulated error over all steps. For an $n$-th order method, the local error is typically $O(h^{n+1})$ and the global error is $O(h^n)$."
+          }
+        ]
+      },
+      {
+        "title": "Worked Example",
+        "items": [
+          {
+            "label": "Euler's Method",
+            "detail": "Use Euler's method with a step size of $h=0.1$ to approximate $y(0.2)$ for the IVP $y' = -y, y(0)=1$.",
+            "derivation": [
+              {
+                "type": "text",
+                "text": "The formula for Euler's method is $y_{n+1} = y_n + hf(t_n, y_n)$. Here $f(t,y)=-y$ and $(t_0, y_0)=(0,1)$."
+              },
+              {
+                "type": "text",
+                "text": "**Step 1:** Find $y_1 \\approx y(0.1)$."
+              },
+              {
+                "type": "equation",
+                "text": "y_1 = y_0 + hf(t_0,y_0) = 1 + 0.1(-1) = 0.9"
+              },
+              {
+                "type": "text",
+                "text": "**Step 2:** Find $y_2 \\approx y(0.2)$."
+              },
+              {
+                "type": "equation",
+                "text": "y_2 = y_1 + hf(t_1,y_1) = 0.9 + 0.1(-0.9) = 0.81"
+              },
+              {
+                "type": "text",
+                "text": "The approximation is $y(0.2) \\approx 0.81$. The true solution is $y(t)=e^{-t} \\approx 0.8187$."
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "chapter": "Chapter 7: Partial Differential Equations",
+    "summary": "Methods for solving PDEs by discretizing the domain and approximating derivatives. The choice of method depends on the PDE's classification (elliptic, parabolic, hyperbolic).",
+    "sections": [
+      {
+        "title": "Key Concepts",
+        "items": [
+          {
+            "label": "PDE Classification",
+            "detail": "Elliptic (e.g., Laplace's Equation) describes steady-state systems. Parabolic (e.g., Heat Equation) describes diffusion processes. Hyperbolic (e.g., Wave Equation) describes wave propagation."
+          },
+          {
+            "label": "Finite Difference Method",
+            "detail": "The core idea is to replace partial derivatives with finite difference approximations at points on a grid, converting the PDE into a system of algebraic equations."
+          },
+          {
+            "label": "Explicit vs. Implicit Methods",
+            "detail": "Explicit methods (like FTCS for the heat equation) calculate the state at a new time step directly from the previous one. They are easy to implement but have stability constraints. Implicit methods (like Crank-Nicolson) involve solving a system of equations at each time step but are typically unconditionally stable."
+          },
+          {
+            "label": "Stability Analysis",
+            "detail": "Crucial for time-dependent problems. An unstable scheme will cause errors to grow exponentially, destroying the solution. The von Neumann analysis is a common tool. For the explicit heat equation solver, stability requires $s = \\frac{\\alpha \\Delta t}{(\\Delta x)^2} \\le \\frac{1}{2}$. For the wave equation, the CFL condition must be met."
+          }
+        ]
+      },
+      {
+        "title": "Worked Example",
+        "items": [
+          {
+            "label": "Explicit Method for Heat Equation",
+            "detail": "For the heat equation $u_t = u_{xx}$ with $u(0,t)=u(4,t)=0$ and $u(x,0)=\\sin(\\frac{\\pi x}{4})$, use the explicit finite difference method with $\\Delta x=1$ and $\\Delta t=0.25$ to find $u(2, 0.25)$.",
+            "derivation": [
+              {
+                "type": "text",
+                "text": "First, calculate the stability ratio $s$. It must be $s \\le 0.5$."
+              },
+              {
+                "type": "equation",
+                "text": "s = \\frac{\\Delta t}{(\\Delta x)^2} = \\frac{0.25}{1^2} = 0.25"
+              },
+              {
+                "type": "text",
+                "text": "The update rule is $u_j^{n+1} = (1-2s)u_j^n + s(u_{j+1}^n + u_{j-1}^n)$, which simplifies to:"
+              },
+              {
+                "type": "equation",
+                "text": "u_j^{n+1} = 0.5u_j^n + 0.25(u_{j+1}^n + u_{j-1}^n)"
+              },
+              {
+                "type": "text",
+                "text": "Next, find the initial values ($n=0$) for the interior grid points:"
+              },
+              {
+                "type": "equation",
+                "text": "u_1^0 = \\sin(\\pi/4) \\approx 0.707, \\quad u_2^0 = \\sin(\\pi/2) = 1, \\quad u_3^0 = \\sin(3\\pi/4) \\approx 0.707"
+              },
+              {
+                "type": "text",
+                "text": "Now find $u_2^1$, which is the value at $x=2$ and time $t=0.25$:"
+              },
+              {
+                "type": "equation",
+                "text": "u_2^1 = 0.5(u_2^0) + 0.25(u_3^0 + u_1^0) = 0.5(1) + 0.25(0.707 + 0.707) \\approx 0.8535"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]
+
