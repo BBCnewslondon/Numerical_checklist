@@ -1,21 +1,21 @@
 :root {
-    --background: #0a2342;
+    --background: #2B2B2B;
     --surface: #1a3a5c;
     --surface-strong: #0f2a40;
-    --accent: #FFD600;
-    --accent-08: rgba(255, 214, 0, 0.08);
-    --accent-12: rgba(255, 214, 0, 0.12);
-    --accent-soft: rgba(255, 214, 0, 0.18);
-    --accent-20: rgba(255, 214, 0, 0.2);
-    --accent-22: rgba(255, 214, 0, 0.22);
-    --accent-25: rgba(255, 214, 0, 0.25);
-    --accent-strong: rgba(255, 214, 0, 0.4);
-    --accent-45: rgba(255, 214, 0, 0.45);
-    --accent-50: rgba(255, 214, 0, 0.5);
-    --accent-60: rgba(255, 214, 0, 0.6);
-    --accent-75: rgba(255, 214, 0, 0.75);
-    --equation-bg: rgba(255, 214, 0, 0.12);
-    --equation-border: rgba(255, 214, 0, 0.2);
+    --accent: #00FF41;
+    --accent-08: rgba(0, 255, 65, 0.08);
+    --accent-12: rgba(0, 255, 65, 0.12);
+    --accent-soft: rgba(0, 255, 65, 0.18);
+    --accent-20: rgba(0, 255, 65, 0.2);
+    --accent-22: rgba(0, 255, 65, 0.22);
+    --accent-25: rgba(0, 255, 65, 0.25);
+    --accent-strong: rgba(0, 255, 65, 0.4);
+    --accent-45: rgba(0, 255, 65, 0.45);
+    --accent-50: rgba(0, 255, 65, 0.5);
+    --accent-60: rgba(0, 255, 65, 0.6);
+    --accent-75: rgba(0, 255, 65, 0.75);
+    --equation-bg: rgba(0, 255, 65, 0.12);
+    --equation-border: rgba(0, 255, 65, 0.2);
     --text-primary: #ffffff;
     --text-secondary: #cccccc;
     --shadow: rgba(0, 0, 0, 0.3);
@@ -28,14 +28,22 @@
 body {
     margin: 0;
     min-height: 100vh;
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Fira Code', 'Roboto Mono', 'Source Code Pro', monospace;
     color: var(--text-primary);
     background-color: var(--background);
-    background-image: linear-gradient(var(--surface-strong) 2px, transparent 2px), linear-gradient(to right, var(--surface-strong) 2px, transparent 2px);
-    background-size: 20px 20px;
     position: relative;
     overflow-x: hidden;
     line-height: 1.6;
+}
+
+#matrix-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    pointer-events: none;
 }
 
 .page-header {
@@ -458,17 +466,6 @@ main {
     text-align: center;
     color: var(--text-secondary);
     font-size: 0.85rem;
-}
-
-.background-animations {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 0;
-    opacity: 0.5;
 }
 
 @media (max-width: 780px) {

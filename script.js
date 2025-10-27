@@ -635,3 +635,50 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 });
+
+// Matrix rain effect
+const canvas = document.getElementById('matrix-canvas');
+const ctx = canvas.getContext('2d');
+
+let matrixChars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz@#$%^&*()_+-=[]{}|;:,.<>?';
+matrixChars = matrixChars.split('');
+
+const fontSize = 14;
+let columns, drops;
+
+function initMatrix() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    columns = Math.floor(canvas.width / fontSize);
+    drops = new Array(columns).fill(1);
+}
+
+function drawMatrix() {
+    ctx.fillStyle = 'rgba(43, 43, 43, 0.04)'; // slightly transparent dark background to create trail effect
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.fillStyle = '#00FF41'; // terminal green
+    ctx.font = fontSize + 'px monospace';
+
+    for (let i = 0; i < drops.length; i++) {
+        const text = matrixChars[Math.floor(Math.random() * matrixChars.length)];
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+            drops[i] = 0;
+        }
+        drops[i]++;
+    }
+}
+
+function animateMatrix() {
+    drawMatrix();
+    requestAnimationFrame(animateMatrix);
+}
+
+window.addEventListener('resize', initMatrix);
+
+document.addEventListener('DOMContentLoaded', () => {
+    initMatrix();
+    animateMatrix();
+});
